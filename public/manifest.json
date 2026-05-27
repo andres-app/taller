@@ -1,0 +1,10 @@
+
+{
+  "name": "TallerPro",
+  "short_name": "TallerPro",
+  "start_url": "/public/index.php",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "icons": []
+}
