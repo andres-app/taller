@@ -330,7 +330,13 @@ $placaBuscada = strtoupper(trim($_GET['placa'] ?? ''));
 
                     </div>
 
-                    <div class="mt-4 grid grid-cols-2 gap-3">
+                    <div class="mt-4 grid grid-cols-1 gap-3">
+
+                        <a
+                            href="nueva_orden.php?vehiculo_id=<?php echo (int)$vehiculo['id']; ?>"
+                            class="rounded-2xl bg-slate-950 px-4 py-4 text-center text-sm font-black text-white shadow-lg active:scale-95">
+                            Nueva orden
+                        </a>
 
                         <a
                             href="nueva_cotizacion.php?vehiculo_id=<?php echo (int)$vehiculo['id']; ?>"
@@ -340,8 +346,8 @@ $placaBuscada = strtoupper(trim($_GET['placa'] ?? ''));
 
                         <a
                             href="#"
-                            class="rounded-2xl bg-slate-950 px-4 py-4 text-center text-sm font-black text-white shadow-lg active:scale-95">
-                            Nueva orden
+                            class="rounded-2xl bg-emerald-600 px-4 py-4 text-center text-sm font-black text-white shadow-lg active:scale-95">
+                            Registrar pago
                         </a>
 
                     </div>
