@@ -343,6 +343,21 @@ $empresa = $_SESSION['empresa'] ?? 'TallerPro';
                     </div>
                 </a>
 
+                <a href="productos.php" class="soft-card min-h-[142px] rounded-[1.7rem] p-5 ring-1 ring-slate-200/70 active:scale-[.98]">
+                    <div class="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-50 text-2xl">
+                        📦
+                    </div>
+
+                    <div class="mt-7 flex items-end justify-between gap-2">
+                        <div>
+                            <h2 class="text-xl font-black tracking-[-.03em]">Stock</h2>
+                            <p class="mt-1 text-sm font-bold text-slate-500">Inventario taller</p>
+                        </div>
+
+                        <span class="text-3xl font-light text-slate-400">›</span>
+                    </div>
+                </a>
+
             </section>
 
             <section class="mt-6">
