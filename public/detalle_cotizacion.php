@@ -21,13 +21,13 @@ if (!$cotizacion) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-    >
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 
     <title>Detalle cotización - TallerPro</title>
 
@@ -56,13 +56,11 @@ if (!$cotizacion) {
 
         body {
             background:
-                linear-gradient(
-                    180deg,
+                linear-gradient(180deg,
                     var(--dark) 0px,
                     var(--dark) 260px,
                     var(--body) 260px,
-                    var(--body) 100%
-                );
+                    var(--body) 100%);
             color: #020617;
             -webkit-font-smoothing: antialiased;
         }
@@ -75,13 +73,11 @@ if (!$cotizacion) {
         .app-shell {
             min-height: 100dvh;
             background:
-                linear-gradient(
-                    180deg,
+                linear-gradient(180deg,
                     var(--dark) 0px,
                     var(--dark) 260px,
                     var(--body) 260px,
-                    var(--body) 100%
-                );
+                    var(--body) 100%);
         }
 
         .top-header {
@@ -93,163 +89,180 @@ if (!$cotizacion) {
         }
 
         .soft-card {
-            background: rgba(255,255,255,.96);
+            background: rgba(255, 255, 255, .96);
             box-shadow:
                 0 18px 36px rgba(15, 23, 42, .08),
-                inset 0 1px 0 rgba(255,255,255,.9);
+                inset 0 1px 0 rgba(255, 255, 255, .9);
         }
     </style>
 </head>
 
 <body>
 
-<div class="app-shell mx-auto max-w-[430px] pb-10">
+    <div class="app-shell mx-auto max-w-[430px] pb-10">
 
-    <header class="top-header relative overflow-hidden rounded-b-[2rem] px-5 pb-6 text-white shadow-2xl">
+        <header class="top-header relative overflow-hidden rounded-b-[2rem] px-5 pb-6 text-white shadow-2xl">
 
-        <div class="relative flex items-start justify-between">
+            <div class="relative flex items-start justify-between">
 
-            <a
-                href="vehiculos.php?placa=<?php echo urlencode($cotizacion['placa']); ?>"
-                class="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/10 text-xl shadow-xl active:scale-95"
-            >
-                ‹
-            </a>
+                <a
+                    href="vehiculos.php?placa=<?php echo urlencode($cotizacion['placa']); ?>"
+                    class="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/10 text-xl shadow-xl active:scale-95">
+                    ‹
+                </a>
 
-            <div class="text-center">
-                <p class="text-[11px] font-black uppercase tracking-[.25em] text-slate-400">
-                    Presupuesto
-                </p>
-
-                <h1 class="mt-1 text-2xl font-black tracking-[-.04em]">
-                    <?php echo htmlspecialchars($cotizacion['codigo']); ?>
-                </h1>
-            </div>
-
-            <a
-                href="logout.php"
-                class="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/10 text-xl shadow-xl active:scale-95"
-            >
-                ⏻
-            </a>
-
-        </div>
-
-        <section class="mt-6 rounded-[1.7rem] border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-xl">
-
-            <div class="flex items-start justify-between gap-4">
-
-                <div>
-                    <p class="text-xs font-black uppercase tracking-[.18em] text-slate-400">
-                        Total
+                <div class="text-center">
+                    <p class="text-[11px] font-black uppercase tracking-[.25em] text-slate-400">
+                        Presupuesto
                     </p>
 
-                    <p class="mt-1 text-4xl font-black tracking-[-.06em]">
-                        S/ <?php echo number_format((float)$cotizacion['total'], 2); ?>
-                    </p>
+                    <h1 class="mt-1 text-2xl font-black tracking-[-.04em]">
+                        <?php echo htmlspecialchars($cotizacion['codigo']); ?>
+                    </h1>
                 </div>
 
-                <span class="rounded-full bg-blue-500/20 px-3 py-2 text-xs font-black text-blue-200">
-                    <?php echo htmlspecialchars($cotizacion['estado']); ?>
-                </span>
+                <a
+                    href="logout.php"
+                    class="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/10 text-xl shadow-xl active:scale-95">
+                    ⏻
+                </a>
 
             </div>
 
-        </section>
+            <section class="mt-6 rounded-[1.7rem] border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-xl">
 
-    </header>
+                <div class="flex items-start justify-between gap-4">
 
-    <main class="px-5 pt-5">
-
-        <section class="soft-card rounded-[1.8rem] p-5 ring-1 ring-slate-200/70">
-
-            <p class="text-xs font-black uppercase tracking-[.16em] text-slate-400">
-                Cliente y vehículo
-            </p>
-
-            <h2 class="mt-2 text-2xl font-black tracking-[-.04em]">
-                <?php echo htmlspecialchars($cotizacion['cliente']); ?>
-            </h2>
-
-            <p class="mt-1 text-sm font-bold text-slate-500">
-                <?php echo htmlspecialchars($cotizacion['placa'] . ' · ' . $cotizacion['marca'] . ' ' . $cotizacion['modelo']); ?>
-            </p>
-
-        </section>
-
-        <section class="mt-5 space-y-3">
-
-            <h2 class="text-xl font-black tracking-[-.04em]">
-                Detalle
-            </h2>
-
-            <?php foreach ($detalle as $item): ?>
-
-                <?php
-                $badge = 'bg-slate-100 text-slate-700';
-                if ($item['tipo_item'] === 'STOCK') {
-                    $badge = 'bg-blue-50 text-blue-700';
-                }
-                if ($item['tipo_item'] === 'EXTERNO') {
-                    $badge = 'bg-amber-50 text-amber-700';
-                }
-                ?>
-
-                <article class="soft-card rounded-[1.5rem] p-4 ring-1 ring-slate-200/70">
-
-                    <div class="flex items-start justify-between gap-3">
-
-                        <div class="min-w-0">
-                            <span class="rounded-full <?php echo $badge; ?> px-3 py-1 text-[11px] font-black">
-                                <?php echo htmlspecialchars($item['tipo_item']); ?>
-                            </span>
-
-                            <h3 class="mt-3 text-base font-black leading-tight">
-                                <?php echo htmlspecialchars($item['descripcion']); ?>
-                            </h3>
-
-                            <p class="mt-1 text-xs font-bold text-slate-500">
-                                Cantidad: <?php echo rtrim(rtrim(number_format((float)$item['cantidad'], 2), '0'), '.'); ?>
-                                · Precio: S/ <?php echo number_format((float)$item['precio_unitario'], 2); ?>
-                            </p>
-                        </div>
-
-                        <p class="shrink-0 text-lg font-black">
-                            S/ <?php echo number_format((float)$item['subtotal'], 2); ?>
+                    <div>
+                        <p class="text-xs font-black uppercase tracking-[.18em] text-slate-400">
+                            Total
                         </p>
 
+                        <p class="mt-1 text-4xl font-black tracking-[-.06em]">
+                            S/ <?php echo number_format((float)$cotizacion['total'], 2); ?>
+                        </p>
                     </div>
 
-                </article>
+                    <span class="rounded-full bg-blue-500/20 px-3 py-2 text-xs font-black text-blue-200">
+                        <?php echo htmlspecialchars($cotizacion['estado']); ?>
+                    </span>
 
-            <?php endforeach; ?>
+                </div>
 
-        </section>
+            </section>
 
-        <section class="mt-6 grid grid-cols-1 gap-3">
+        </header>
 
-            <a
-                href="#"
-                class="block rounded-[1.5rem] bg-blue-600 px-5 py-4 text-center text-base font-black text-white shadow-xl shadow-blue-600/25 active:scale-[.98]"
-            >
-                Convertir en orden
-            </a>
+        <main class="px-5 pt-5">
 
-            <?php if (!empty($cotizacion['telefono'])): ?>
-                <a
-                    href="https://wa.me/51<?php echo preg_replace('/[^0-9]/', '', $cotizacion['telefono']); ?>?text=<?php echo urlencode('Hola, le comparto su presupuesto ' . $cotizacion['codigo'] . ' por S/ ' . number_format((float)$cotizacion['total'], 2)); ?>"
-                    target="_blank"
-                    class="block rounded-[1.5rem] bg-emerald-500 px-5 py-4 text-center text-base font-black text-white shadow-xl shadow-emerald-500/20 active:scale-[.98]"
-                >
-                    Enviar por WhatsApp
-                </a>
-            <?php endif; ?>
+            <section class="soft-card rounded-[1.8rem] p-5 ring-1 ring-slate-200/70">
 
-        </section>
+                <p class="text-xs font-black uppercase tracking-[.16em] text-slate-400">
+                    Cliente y vehículo
+                </p>
 
-    </main>
+                <h2 class="mt-2 text-2xl font-black tracking-[-.04em]">
+                    <?php echo htmlspecialchars($cotizacion['cliente']); ?>
+                </h2>
 
-</div>
+                <p class="mt-1 text-sm font-bold text-slate-500">
+                    <?php echo htmlspecialchars($cotizacion['placa'] . ' · ' . $cotizacion['marca'] . ' ' . $cotizacion['modelo']); ?>
+                </p>
+
+            </section>
+
+            <section class="mt-5 space-y-3">
+
+                <h2 class="text-xl font-black tracking-[-.04em]">
+                    Detalle
+                </h2>
+
+                <?php foreach ($detalle as $item): ?>
+
+                    <?php
+                    $badge = 'bg-slate-100 text-slate-700';
+                    if ($item['tipo_item'] === 'STOCK') {
+                        $badge = 'bg-blue-50 text-blue-700';
+                    }
+                    if ($item['tipo_item'] === 'EXTERNO') {
+                        $badge = 'bg-amber-50 text-amber-700';
+                    }
+                    ?>
+
+                    <article class="soft-card rounded-[1.5rem] p-4 ring-1 ring-slate-200/70">
+
+                        <div class="flex items-start justify-between gap-3">
+
+                            <div class="min-w-0">
+                                <span class="rounded-full <?php echo $badge; ?> px-3 py-1 text-[11px] font-black">
+                                    <?php echo htmlspecialchars($item['tipo_item']); ?>
+                                </span>
+
+                                <h3 class="mt-3 text-base font-black leading-tight">
+                                    <?php echo htmlspecialchars($item['descripcion']); ?>
+                                </h3>
+
+                                <p class="mt-1 text-xs font-bold text-slate-500">
+                                    Cantidad: <?php echo rtrim(rtrim(number_format((float)$item['cantidad'], 2), '0'), '.'); ?>
+                                    · Precio: S/ <?php echo number_format((float)$item['precio_unitario'], 2); ?>
+                                </p>
+                            </div>
+
+                            <p class="shrink-0 text-lg font-black">
+                                S/ <?php echo number_format((float)$item['subtotal'], 2); ?>
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                <?php endforeach; ?>
+
+            </section>
+
+            <section class="mt-6 grid grid-cols-1 gap-3">
+
+                <?php if (!empty($_SESSION['error_convertir'])): ?>
+                    <div class="rounded-[1.2rem] border border-red-100 bg-red-50 p-4 text-sm font-bold text-red-700">
+                        <?php echo htmlspecialchars($_SESSION['error_convertir']);
+                        unset($_SESSION['error_convertir']); ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($cotizacion['estado'] !== 'CONVERTIDA'): ?>
+                    <form method="POST" action="convertir_cotizacion.php">
+                        <input type="hidden" name="cotizacion_id" value="<?php echo (int)$cotizacion['id']; ?>">
+
+                        <button
+                            type="submit"
+                            onclick="return confirm('¿Convertir esta cotización en orden? Si hay productos de stock, se descontarán del inventario.');"
+                            class="block w-full rounded-[1.5rem] bg-blue-600 px-5 py-4 text-center text-base font-black text-white shadow-xl shadow-blue-600/25 active:scale-[.98]">
+                            Convertir en orden
+                        </button>
+                    </form>
+                <?php else: ?>
+                    <a
+                        href="detalle_orden.php?id=<?php echo (int)$cotizacion['orden_id']; ?>"
+                        class="block rounded-[1.5rem] bg-slate-950 px-5 py-4 text-center text-base font-black text-white shadow-xl active:scale-[.98]">
+                        Ver orden generada
+                    </a>
+                <?php endif; ?>
+
+                <?php if (!empty($cotizacion['telefono'])): ?>
+                    <a
+                        href="https://wa.me/51<?php echo preg_replace('/[^0-9]/', '', $cotizacion['telefono']); ?>?text=<?php echo urlencode('Hola, le comparto su presupuesto ' . $cotizacion['codigo'] . ' por S/ ' . number_format((float)$cotizacion['total'], 2)); ?>"
+                        target="_blank"
+                        class="block rounded-[1.5rem] bg-emerald-500 px-5 py-4 text-center text-base font-black text-white shadow-xl shadow-emerald-500/20 active:scale-[.98]">
+                        Enviar por WhatsApp
+                    </a>
+                <?php endif; ?>
+
+            </section>
+
+        </main>
+
+    </div>
 
 </body>
+
 </html>

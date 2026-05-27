@@ -462,9 +462,9 @@ $empresa = $_SESSION['empresa'] ?? 'TallerPro';
                         <p>Nueva</p>
                     </a>
 
-                    <a href="#" class="nav-item">
+                    <a href="cotizaciones.php" class="nav-item">
                         <div class="text-[1.20rem] leading-none">🧾</div>
-                        <p>Órdenes</p>
+                        <p>Cotiza</p>
                     </a>
 
                     <a href="#" class="nav-item">

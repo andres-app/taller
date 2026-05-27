@@ -382,10 +382,10 @@ $respuesta = CtrProductos::guardar();
                     <p>Nuevo</p>
                 </a>
 
-                <a href="#" class="nav-item">
-                    <div class="text-[1.20rem] leading-none">🧾</div>
-                    <p>Órdenes</p>
-                </a>
+                    <a href="cotizaciones.php" class="nav-item">
+                        <div class="text-[1.20rem] leading-none">🧾</div>
+                        <p>Cotiza</p>
+                    </a>
 
                 <a href="productos.php" class="nav-item">
                     <div class="text-[1.35rem] leading-none">📦</div>
