@@ -115,8 +115,8 @@ class MdOrdenes
                     if ((float)$producto['stock_actual'] < $cantidad) {
                         throw new Exception(
                             'Stock insuficiente para ' . $producto['nombre'] .
-                            '. Disponible: ' . $producto['stock_actual'] .
-                            ', requerido: ' . $cantidad
+                                '. Disponible: ' . $producto['stock_actual'] .
+                                ', requerido: ' . $cantidad
                         );
                     }
 
@@ -275,7 +275,6 @@ class MdOrdenes
                 'ok' => true,
                 'orden_id' => $orden_id
             ];
-
         } catch (Exception $e) {
             $db->rollBack();
 
@@ -333,5 +332,89 @@ class MdOrdenes
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function listarOrdenes($empresa_id, $buscar = '', $estado = '')
+    {
+        $database = new Database();
+        $db = $database->connect();
+
+        $sql = "
+        SELECT 
+            o.id,
+            o.codigo,
+            o.descripcion,
+            o.total,
+            o.estado,
+            o.pago_estado,
+            o.adelanto,
+            o.saldo,
+            o.origen,
+            o.fecha_registro,
+            v.placa,
+            v.marca,
+            v.modelo,
+            c.nombre AS cliente,
+            c.telefono
+        FROM ordenes o
+        INNER JOIN vehiculos v ON v.id = o.vehiculo_id
+        INNER JOIN clientes c ON c.id = o.cliente_id
+        WHERE o.empresa_id = :empresa_id
+    ";
+
+        if ($buscar !== '') {
+            $sql .= "
+            AND (
+                o.codigo LIKE :buscar
+                OR o.descripcion LIKE :buscar
+                OR v.placa LIKE :buscar
+                OR c.nombre LIKE :buscar
+                OR c.telefono LIKE :buscar
+            )
+        ";
+        }
+
+        if ($estado !== '') {
+            $sql .= " AND o.estado = :estado ";
+        }
+
+        $sql .= " ORDER BY o.fecha_registro DESC, o.id DESC ";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':empresa_id', $empresa_id, PDO::PARAM_INT);
+
+        if ($buscar !== '') {
+            $buscarLike = '%' . $buscar . '%';
+            $stmt->bindParam(':buscar', $buscarLike);
+        }
+
+        if ($estado !== '') {
+            $stmt->bindParam(':estado', $estado);
+        }
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function resumenOrdenes($empresa_id)
+    {
+        $database = new Database();
+        $db = $database->connect();
+
+        $stmt = $db->prepare("
+        SELECT
+            COUNT(*) AS total_ordenes,
+            SUM(CASE WHEN estado = 'PENDIENTE' THEN 1 ELSE 0 END) AS pendientes,
+            SUM(CASE WHEN estado = 'FINALIZADO' THEN 1 ELSE 0 END) AS finalizadas,
+            SUM(CASE WHEN pago_estado = 'FIADO' OR saldo > 0 THEN saldo ELSE 0 END) AS total_fiado,
+            SUM(total) AS total_general
+        FROM ordenes
+        WHERE empresa_id = :empresa_id
+    ");
+
+        $stmt->bindParam(':empresa_id', $empresa_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
-?>

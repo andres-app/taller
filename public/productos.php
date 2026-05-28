@@ -402,11 +402,10 @@ $categoriaActual = trim($_GET['categoria'] ?? '');
                         <p>Nuevo</p>
                     </a>
 
-                    <a href="cotizaciones.php" class="nav-item">
+                    <a href="ordenes.php" class="nav-item">
                         <div class="text-[1.20rem] leading-none">🧾</div>
-                        <p>Cotiza</p>
+                        <p>Órdenes</p>
                     </a>
-
                     <a href="productos.php" class="nav-item active">
                         <div class="text-[1.35rem] leading-none">📦</div>
                         <p>Stock</p>

@@ -108,5 +108,34 @@ class CtrOrdenes
             'detalle' => MdOrdenes::obtenerDetalle($empresa_id, $orden_id)
         ];
     }
+
+    public static function listar()
+    {
+        if (!isset($_SESSION['empresa_id'])) {
+            return [];
+        }
+
+        $empresa_id = (int) $_SESSION['empresa_id'];
+        $buscar = trim($_GET['buscar'] ?? '');
+        $estado = trim($_GET['estado'] ?? '');
+
+        return MdOrdenes::listarOrdenes($empresa_id, $buscar, $estado);
+    }
+
+    public static function resumen()
+    {
+        if (!isset($_SESSION['empresa_id'])) {
+            return [
+                'total_ordenes' => 0,
+                'pendientes' => 0,
+                'finalizadas' => 0,
+                'total_fiado' => 0,
+                'total_general' => 0
+            ];
+        }
+
+        $empresa_id = (int) $_SESSION['empresa_id'];
+
+        return MdOrdenes::resumenOrdenes($empresa_id);
+    }
 }
-?>

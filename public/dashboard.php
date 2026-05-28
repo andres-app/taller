@@ -328,7 +328,7 @@ $empresa = $_SESSION['empresa'] ?? 'TallerPro';
                     </div>
                 </a>
 
-                <a href="#" class="soft-card min-h-[142px] rounded-[1.7rem] p-5 ring-1 ring-slate-200/70 active:scale-[.98]">
+                <a href="ordenes.php" class="soft-card min-h-[142px] rounded-[1.7rem] p-5 ring-1 ring-slate-200/70 active:scale-[.98]">
                     <div class="grid h-12 w-12 place-items-center rounded-2xl bg-violet-50 text-2xl">
                         🧾
                     </div>
@@ -473,13 +473,13 @@ $empresa = $_SESSION['empresa'] ?? 'TallerPro';
                         <p>Autos</p>
                     </a>
 
-                    <a href="#" class="nav-item pt-8">
+                    <a href="ordenes.php" class="nav-item pt-8">
                         <p>Nueva</p>
                     </a>
 
-                    <a href="cotizaciones.php" class="nav-item">
+                    <a href="nueva_orden.php" class="nav-item">
                         <div class="text-[1.20rem] leading-none">🧾</div>
-                        <p>Cotiza</p>
+                        <p>Órdenes</p>
                     </a>
 
                     <a href="#" class="nav-item">

@@ -417,9 +417,9 @@ $placaPrevia = strtoupper(trim($_GET['placa'] ?? ''));
                         <p>Nueva</p>
                     </a>
 
-                    <a href="cotizaciones.php" class="nav-item">
+                    <a href="ordenes.php" class="nav-item">
                         <div class="text-[1.20rem] leading-none">🧾</div>
-                        <p>Cotiza</p>
+                        <p>Órdenes</p>
                     </a>
 
                     <a href="#" class="nav-item">
