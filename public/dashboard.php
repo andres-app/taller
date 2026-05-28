@@ -343,7 +343,7 @@ $empresa = $_SESSION['empresa'] ?? 'TallerPro';
                     </div>
                 </a>
 
-                <a href="#" class="soft-card min-h-[142px] rounded-[1.7rem] p-5 ring-1 ring-slate-200/70 active:scale-[.98]">
+                <a href="deudas.php" class="soft-card min-h-[142px] rounded-[1.7rem] p-5 ring-1 ring-slate-200/70 active:scale-[.98]">
                     <div class="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-50 text-2xl">
                         💰
                     </div>
@@ -455,7 +455,7 @@ $empresa = $_SESSION['empresa'] ?? 'TallerPro';
             <nav class="bottom-bar relative rounded-[1.65rem] px-3 pb-2 pt-2 text-white">
 
                 <a
-                    href="#"
+                    href="nueva_orden.php"
                     class="fab absolute left-1/2 top-0 grid -translate-x-1/2 -translate-y-7 place-items-center rounded-full text-4xl font-light text-white ring-[8px] ring-[#eef3f8] active:scale-95"
                     aria-label="Nueva orden">
                     +
