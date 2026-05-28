@@ -283,7 +283,7 @@ $empresa = $_SESSION['empresa'] ?? 'TallerPro';
 
             <section class="grid grid-cols-2 gap-3">
 
-                <a href="#" class="soft-card min-h-[142px] rounded-[1.7rem] p-5 ring-1 ring-slate-200/70 active:scale-[.98]">
+                <a href="clientes.php" class="soft-card min-h-[142px] rounded-[1.7rem] p-5 ring-1 ring-slate-200/70 active:scale-[.98]">
                     <div class="grid h-12 w-12 place-items-center rounded-2xl bg-blue-50 text-2xl">
                         👤
                     </div>

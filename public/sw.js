@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tallerpro-v7';
+const CACHE_NAME = 'tallerpro-v9';
 
 const APP_SHELL = [
   './',
