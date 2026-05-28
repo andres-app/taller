@@ -417,4 +417,206 @@ class MdOrdenes
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public static function listarDeudas($empresa_id, $buscar = '')
+{
+    $database = new Database();
+    $db = $database->connect();
+
+    $sql = "
+        SELECT 
+            o.id,
+            o.codigo,
+            o.descripcion,
+            o.total,
+            o.adelanto,
+            o.saldo,
+            o.pago_estado,
+            o.estado,
+            o.fecha_registro,
+            v.placa,
+            v.marca,
+            v.modelo,
+            c.nombre AS cliente,
+            c.telefono
+        FROM ordenes o
+        INNER JOIN vehiculos v ON v.id = o.vehiculo_id
+        INNER JOIN clientes c ON c.id = o.cliente_id
+        WHERE o.empresa_id = :empresa_id
+        AND o.saldo > 0
+    ";
+
+    if ($buscar !== '') {
+        $sql .= "
+            AND (
+                o.codigo LIKE :buscar
+                OR v.placa LIKE :buscar
+                OR c.nombre LIKE :buscar
+                OR c.telefono LIKE :buscar
+            )
+        ";
+    }
+
+    $sql .= " ORDER BY o.fecha_registro DESC, o.id DESC ";
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':empresa_id', $empresa_id, PDO::PARAM_INT);
+
+    if ($buscar !== '') {
+        $buscarLike = '%' . $buscar . '%';
+        $stmt->bindParam(':buscar', $buscarLike);
+    }
+
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public static function resumenDeudas($empresa_id)
+{
+    $database = new Database();
+    $db = $database->connect();
+
+    $stmt = $db->prepare("
+        SELECT
+            COUNT(*) AS total_deudas,
+            SUM(saldo) AS total_saldo,
+            SUM(total) AS total_original,
+            SUM(adelanto) AS total_pagado
+        FROM ordenes
+        WHERE empresa_id = :empresa_id
+        AND saldo > 0
+    ");
+
+    $stmt->bindParam(':empresa_id', $empresa_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public static function obtenerPagosOrden($empresa_id, $orden_id)
+{
+    $database = new Database();
+    $db = $database->connect();
+
+    $stmt = $db->prepare("
+        SELECT *
+        FROM pagos
+        WHERE empresa_id = :empresa_id
+        AND orden_id = :orden_id
+        ORDER BY created_at DESC, id DESC
+    ");
+
+    $stmt->bindParam(':empresa_id', $empresa_id, PDO::PARAM_INT);
+    $stmt->bindParam(':orden_id', $orden_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public static function registrarPago($empresa_id, $orden_id, $datos)
+{
+    $database = new Database();
+    $db = $database->connect();
+
+    try {
+        $db->beginTransaction();
+
+        $stmtOrden = $db->prepare("
+            SELECT id, total, adelanto, saldo
+            FROM ordenes
+            WHERE id = :orden_id
+            AND empresa_id = :empresa_id
+            LIMIT 1
+            FOR UPDATE
+        ");
+
+        $stmtOrden->bindParam(':orden_id', $orden_id, PDO::PARAM_INT);
+        $stmtOrden->bindParam(':empresa_id', $empresa_id, PDO::PARAM_INT);
+        $stmtOrden->execute();
+
+        $orden = $stmtOrden->fetch(PDO::FETCH_ASSOC);
+
+        if (!$orden) {
+            throw new Exception('Orden no encontrada.');
+        }
+
+        $monto = (float)($datos['monto'] ?? 0);
+
+        if ($monto <= 0) {
+            throw new Exception('El monto debe ser mayor a cero.');
+        }
+
+        if ($monto > (float)$orden['saldo']) {
+            throw new Exception('El pago no puede ser mayor al saldo pendiente.');
+        }
+
+        $metodo = trim($datos['metodo'] ?? 'EFECTIVO');
+        $observacion = trim($datos['observacion'] ?? '');
+
+        $stmtPago = $db->prepare("
+            INSERT INTO pagos (
+                empresa_id,
+                orden_id,
+                monto,
+                metodo,
+                observacion
+            ) VALUES (
+                :empresa_id,
+                :orden_id,
+                :monto,
+                :metodo,
+                :observacion
+            )
+        ");
+
+        $stmtPago->bindParam(':empresa_id', $empresa_id, PDO::PARAM_INT);
+        $stmtPago->bindParam(':orden_id', $orden_id, PDO::PARAM_INT);
+        $stmtPago->bindParam(':monto', $monto);
+        $stmtPago->bindParam(':metodo', $metodo);
+        $stmtPago->bindParam(':observacion', $observacion);
+        $stmtPago->execute();
+
+        $nuevoAdelanto = (float)$orden['adelanto'] + $monto;
+        $nuevoSaldo = (float)$orden['saldo'] - $monto;
+
+        if ($nuevoSaldo <= 0) {
+            $nuevoSaldo = 0;
+            $pagoEstado = 'PAGADO';
+        } else {
+            $pagoEstado = 'ADELANTO';
+        }
+
+        $stmtUpdate = $db->prepare("
+            UPDATE ordenes
+            SET adelanto = :adelanto,
+                saldo = :saldo,
+                pago_estado = :pago_estado
+            WHERE id = :orden_id
+            AND empresa_id = :empresa_id
+        ");
+
+        $stmtUpdate->bindParam(':adelanto', $nuevoAdelanto);
+        $stmtUpdate->bindParam(':saldo', $nuevoSaldo);
+        $stmtUpdate->bindParam(':pago_estado', $pagoEstado);
+        $stmtUpdate->bindParam(':orden_id', $orden_id, PDO::PARAM_INT);
+        $stmtUpdate->bindParam(':empresa_id', $empresa_id, PDO::PARAM_INT);
+        $stmtUpdate->execute();
+
+        $db->commit();
+
+        return [
+            'ok' => true,
+            'orden_id' => $orden_id
+        ];
+
+    } catch (Exception $e) {
+        $db->rollBack();
+
+        return [
+            'ok' => false,
+            'error' => $e->getMessage()
+        ];
+    }
+}
 }

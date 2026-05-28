@@ -345,9 +345,9 @@ $placaBuscada = strtoupper(trim($_GET['placa'] ?? ''));
                         </a>
 
                         <a
-                            href="#"
+                            href="deudas.php"
                             class="rounded-2xl bg-emerald-600 px-4 py-4 text-center text-sm font-black text-white shadow-lg active:scale-95">
-                            Registrar pago
+                            Ver deudas
                         </a>
 
                     </div>

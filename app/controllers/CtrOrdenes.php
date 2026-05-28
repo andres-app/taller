@@ -138,4 +138,88 @@ class CtrOrdenes
 
         return MdOrdenes::resumenOrdenes($empresa_id);
     }
+
+    public static function deudas()
+    {
+        if (!isset($_SESSION['empresa_id'])) {
+            return [];
+        }
+
+        $empresa_id = (int) $_SESSION['empresa_id'];
+        $buscar = trim($_GET['buscar'] ?? '');
+
+        return MdOrdenes::listarDeudas($empresa_id, $buscar);
+    }
+
+    public static function resumenDeudas()
+    {
+        if (!isset($_SESSION['empresa_id'])) {
+            return [
+                'total_deudas' => 0,
+                'total_saldo' => 0,
+                'total_original' => 0,
+                'total_pagado' => 0
+            ];
+        }
+
+        $empresa_id = (int) $_SESSION['empresa_id'];
+
+        return MdOrdenes::resumenDeudas($empresa_id);
+    }
+
+    public static function registrarPago()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return [
+                'ok' => null,
+                'mensaje' => ''
+            ];
+        }
+
+        if (!isset($_SESSION['empresa_id'])) {
+            return [
+                'ok' => false,
+                'mensaje' => 'Sesión inválida.'
+            ];
+        }
+
+        $empresa_id = (int) $_SESSION['empresa_id'];
+        $orden_id = (int)($_POST['orden_id'] ?? 0);
+
+        if ($orden_id <= 0) {
+            return [
+                'ok' => false,
+                'mensaje' => 'Orden inválida.'
+            ];
+        }
+
+        $datos = [
+            'monto' => (float)($_POST['monto'] ?? 0),
+            'metodo' => trim($_POST['metodo'] ?? 'EFECTIVO'),
+            'observacion' => trim($_POST['observacion'] ?? '')
+        ];
+
+        $respuesta = MdOrdenes::registrarPago($empresa_id, $orden_id, $datos);
+
+        if ($respuesta['ok']) {
+            header("Location: detalle_orden.php?id=" . $orden_id . "&pago=ok");
+            exit;
+        }
+
+        return [
+            'ok' => false,
+            'mensaje' => $respuesta['error']
+        ];
+    }
+
+    public static function pagosOrden($orden_id)
+    {
+        if (!isset($_SESSION['empresa_id'])) {
+            return [];
+        }
+
+        $empresa_id = (int) $_SESSION['empresa_id'];
+
+        return MdOrdenes::obtenerPagosOrden($empresa_id, $orden_id);
+    }
 }

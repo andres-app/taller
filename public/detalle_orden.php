@@ -12,6 +12,7 @@ $datos = CtrOrdenes::detalle();
 
 $orden = $datos['orden'];
 $detalle = $datos['detalle'];
+$pagos = CtrOrdenes::pagosOrden((int)$orden['id']);
 
 if (!$orden) {
     header("Location: vehiculos.php");
@@ -21,13 +22,13 @@ if (!$orden) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
-    >
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 
     <title>Detalle orden - TallerPro</title>
 
@@ -56,13 +57,11 @@ if (!$orden) {
 
         body {
             background:
-                linear-gradient(
-                    180deg,
+                linear-gradient(180deg,
                     var(--dark) 0px,
                     var(--dark) 260px,
                     var(--body) 260px,
-                    var(--body) 100%
-                );
+                    var(--body) 100%);
             color: #020617;
             -webkit-font-smoothing: antialiased;
         }
@@ -75,13 +74,11 @@ if (!$orden) {
         .app-shell {
             min-height: 100dvh;
             background:
-                linear-gradient(
-                    180deg,
+                linear-gradient(180deg,
                     var(--dark) 0px,
                     var(--dark) 260px,
                     var(--body) 260px,
-                    var(--body) 100%
-                );
+                    var(--body) 100%);
         }
 
         .top-header {
@@ -93,160 +90,267 @@ if (!$orden) {
         }
 
         .soft-card {
-            background: rgba(255,255,255,.96);
+            background: rgba(255, 255, 255, .96);
             box-shadow:
                 0 18px 36px rgba(15, 23, 42, .08),
-                inset 0 1px 0 rgba(255,255,255,.9);
+                inset 0 1px 0 rgba(255, 255, 255, .9);
         }
     </style>
 </head>
 
 <body>
 
-<div class="app-shell mx-auto max-w-[430px] pb-10">
+    <div class="app-shell mx-auto max-w-[430px] pb-10">
 
-    <header class="top-header relative overflow-hidden rounded-b-[2rem] px-5 pb-6 text-white shadow-2xl">
+        <header class="top-header relative overflow-hidden rounded-b-[2rem] px-5 pb-6 text-white shadow-2xl">
 
-        <div class="relative flex items-start justify-between">
+            <div class="relative flex items-start justify-between">
 
-            <a
-                href="vehiculos.php?placa=<?php echo urlencode($orden['placa']); ?>"
-                class="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/10 text-xl shadow-xl active:scale-95"
-            >
-                ‹
-            </a>
+                <a
+                    href="vehiculos.php?placa=<?php echo urlencode($orden['placa']); ?>"
+                    class="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/10 text-xl shadow-xl active:scale-95">
+                    ‹
+                </a>
 
-            <div class="text-center">
-                <p class="text-[11px] font-black uppercase tracking-[.25em] text-slate-400">
-                    Orden
-                </p>
-
-                <h1 class="mt-1 text-2xl font-black tracking-[-.04em]">
-                    <?php echo htmlspecialchars($orden['codigo'] ?: ('ORD-' . $orden['id'])); ?>
-                </h1>
-            </div>
-
-            <a
-                href="logout.php"
-                class="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/10 text-xl shadow-xl active:scale-95"
-            >
-                ⏻
-            </a>
-
-        </div>
-
-        <section class="mt-6 rounded-[1.7rem] border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-xl">
-
-            <div class="flex items-start justify-between gap-4">
-
-                <div>
-                    <p class="text-xs font-black uppercase tracking-[.18em] text-slate-400">
-                        Total orden
+                <div class="text-center">
+                    <p class="text-[11px] font-black uppercase tracking-[.25em] text-slate-400">
+                        Orden
                     </p>
 
-                    <p class="mt-1 text-4xl font-black tracking-[-.06em]">
-                        S/ <?php echo number_format((float)$orden['total'], 2); ?>
-                    </p>
+                    <h1 class="mt-1 text-2xl font-black tracking-[-.04em]">
+                        <?php echo htmlspecialchars($orden['codigo'] ?: ('ORD-' . $orden['id'])); ?>
+                    </h1>
                 </div>
 
-                <span class="rounded-full bg-amber-500/20 px-3 py-2 text-xs font-black text-amber-200">
-                    <?php echo htmlspecialchars($orden['estado']); ?>
-                </span>
+                <a
+                    href="logout.php"
+                    class="grid h-11 w-11 place-items-center rounded-2xl border border-white/10 bg-white/10 text-xl shadow-xl active:scale-95">
+                    ⏻
+                </a>
 
             </div>
 
-            <p class="mt-3 text-xs font-semibold text-slate-400">
-                Origen: <?php echo htmlspecialchars($orden['origen'] ?: 'DIRECTA'); ?>
-            </p>
+            <section class="mt-6 rounded-[1.7rem] border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur-xl">
 
-        </section>
+                <div class="flex items-start justify-between gap-4">
 
-    </header>
+                    <div>
+                        <p class="text-xs font-black uppercase tracking-[.18em] text-slate-400">
+                            Total orden
+                        </p>
 
-    <main class="px-5 pt-5">
+                        <p class="mt-1 text-4xl font-black tracking-[-.06em]">
+                            S/ <?php echo number_format((float)$orden['total'], 2); ?>
+                        </p>
+                    </div>
 
-        <section class="soft-card rounded-[1.8rem] p-5 ring-1 ring-slate-200/70">
+                    <span class="rounded-full bg-amber-500/20 px-3 py-2 text-xs font-black text-amber-200">
+                        <?php echo htmlspecialchars($orden['estado']); ?>
+                    </span>
 
-            <p class="text-xs font-black uppercase tracking-[.16em] text-slate-400">
-                Cliente y vehículo
-            </p>
+                </div>
 
-            <h2 class="mt-2 text-2xl font-black tracking-[-.04em]">
-                <?php echo htmlspecialchars($orden['cliente']); ?>
-            </h2>
+                <p class="mt-3 text-xs font-semibold text-slate-400">
+                    Origen: <?php echo htmlspecialchars($orden['origen'] ?: 'DIRECTA'); ?>
+                </p>
 
-            <p class="mt-1 text-sm font-bold text-slate-500">
-                <?php echo htmlspecialchars($orden['placa'] . ' · ' . $orden['marca'] . ' ' . $orden['modelo']); ?>
-            </p>
+            </section>
 
-        </section>
+        </header>
 
-        <section class="mt-5 space-y-3">
+        <main class="px-5 pt-5">
 
-            <h2 class="text-xl font-black tracking-[-.04em]">
-                Detalle de trabajo
-            </h2>
+            <section class="soft-card rounded-[1.8rem] p-5 ring-1 ring-slate-200/70">
 
-            <?php foreach ($detalle as $item): ?>
+                <p class="text-xs font-black uppercase tracking-[.16em] text-slate-400">
+                    Cliente y vehículo
+                </p>
 
-                <?php
-                $badge = 'bg-slate-100 text-slate-700';
-                if ($item['tipo_item'] === 'STOCK') {
-                    $badge = 'bg-blue-50 text-blue-700';
-                }
-                if ($item['tipo_item'] === 'EXTERNO') {
-                    $badge = 'bg-amber-50 text-amber-700';
-                }
-                ?>
+                <h2 class="mt-2 text-2xl font-black tracking-[-.04em]">
+                    <?php echo htmlspecialchars($orden['cliente']); ?>
+                </h2>
 
-                <article class="soft-card rounded-[1.5rem] p-4 ring-1 ring-slate-200/70">
+                <p class="mt-1 text-sm font-bold text-slate-500">
+                    <?php echo htmlspecialchars($orden['placa'] . ' · ' . $orden['marca'] . ' ' . $orden['modelo']); ?>
+                </p>
 
-                    <div class="flex items-start justify-between gap-3">
+            </section>
 
-                        <div class="min-w-0">
-                            <span class="rounded-full <?php echo $badge; ?> px-3 py-1 text-[11px] font-black">
-                                <?php echo htmlspecialchars($item['tipo_item']); ?>
-                            </span>
+            <section class="mt-5 space-y-3">
 
-                            <h3 class="mt-3 text-base font-black leading-tight">
-                                <?php echo htmlspecialchars($item['descripcion']); ?>
-                            </h3>
+                <h2 class="text-xl font-black tracking-[-.04em]">
+                    Detalle de trabajo
+                </h2>
 
-                            <p class="mt-1 text-xs font-bold text-slate-500">
-                                Cantidad: <?php echo rtrim(rtrim(number_format((float)$item['cantidad'], 2), '0'), '.'); ?>
-                                · Precio: S/ <?php echo number_format((float)$item['precio_unitario'], 2); ?>
+                <?php foreach ($detalle as $item): ?>
+
+                    <?php
+                    $badge = 'bg-slate-100 text-slate-700';
+                    if ($item['tipo_item'] === 'STOCK') {
+                        $badge = 'bg-blue-50 text-blue-700';
+                    }
+                    if ($item['tipo_item'] === 'EXTERNO') {
+                        $badge = 'bg-amber-50 text-amber-700';
+                    }
+                    ?>
+
+                    <article class="soft-card rounded-[1.5rem] p-4 ring-1 ring-slate-200/70">
+
+                        <div class="flex items-start justify-between gap-3">
+
+                            <div class="min-w-0">
+                                <span class="rounded-full <?php echo $badge; ?> px-3 py-1 text-[11px] font-black">
+                                    <?php echo htmlspecialchars($item['tipo_item']); ?>
+                                </span>
+
+                                <h3 class="mt-3 text-base font-black leading-tight">
+                                    <?php echo htmlspecialchars($item['descripcion']); ?>
+                                </h3>
+
+                                <p class="mt-1 text-xs font-bold text-slate-500">
+                                    Cantidad: <?php echo rtrim(rtrim(number_format((float)$item['cantidad'], 2), '0'), '.'); ?>
+                                    · Precio: S/ <?php echo number_format((float)$item['precio_unitario'], 2); ?>
+                                </p>
+                            </div>
+
+                            <p class="shrink-0 text-lg font-black">
+                                S/ <?php echo number_format((float)$item['subtotal'], 2); ?>
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                <?php endforeach; ?>
+
+            </section>
+
+            <?php if (!empty($orden['telefono'])): ?>
+
+                <section class="mt-6">
+                    <a
+                        href="https://wa.me/51<?php echo preg_replace('/[^0-9]/', '', $orden['telefono']); ?>?text=<?php echo urlencode('Hola, su orden ' . ($orden['codigo'] ?: ('ORD-' . $orden['id'])) . ' fue registrada por S/ ' . number_format((float)$orden['total'], 2)); ?>"
+                        target="_blank"
+                        class="block rounded-[1.5rem] bg-emerald-500 px-5 py-4 text-center text-base font-black text-white shadow-xl shadow-emerald-500/20 active:scale-[.98]">
+                        Avisar por WhatsApp
+                    </a>
+                </section>
+
+            <?php endif; ?>
+
+            <section class="mt-6">
+
+                <div class="mb-3 flex items-center justify-between">
+                    <h2 class="text-xl font-black tracking-[-.04em]">
+                        Pagos
+                    </h2>
+
+                    <?php if ((float)$orden['saldo'] > 0): ?>
+                        <a
+                            href="registrar_pago.php?orden_id=<?php echo (int)$orden['id']; ?>"
+                            class="rounded-full bg-blue-600 px-4 py-2 text-xs font-black text-white">
+                            + Pago
+                        </a>
+                    <?php endif; ?>
+                </div>
+
+                <?php if (isset($_GET['pago'])): ?>
+                    <div class="mb-3 rounded-[1.2rem] border border-emerald-100 bg-emerald-50 p-4 text-sm font-bold text-emerald-700">
+                        Pago registrado correctamente.
+                    </div>
+                <?php endif; ?>
+
+                <div class="soft-card rounded-[1.8rem] p-5 ring-1 ring-slate-200/70">
+
+                    <div class="grid grid-cols-3 gap-2 text-center">
+
+                        <div class="rounded-2xl bg-slate-50 p-3">
+                            <p class="text-[10px] font-black uppercase tracking-[.12em] text-slate-400">
+                                Total
+                            </p>
+
+                            <p class="mt-1 font-black">
+                                S/ <?php echo number_format((float)$orden['total'], 2); ?>
                             </p>
                         </div>
 
-                        <p class="shrink-0 text-lg font-black">
-                            S/ <?php echo number_format((float)$item['subtotal'], 2); ?>
-                        </p>
+                        <div class="rounded-2xl bg-emerald-50 p-3">
+                            <p class="text-[10px] font-black uppercase tracking-[.12em] text-emerald-600">
+                                Pagado
+                            </p>
+
+                            <p class="mt-1 font-black text-emerald-700">
+                                S/ <?php echo number_format((float)$orden['adelanto'], 2); ?>
+                            </p>
+                        </div>
+
+                        <div class="rounded-2xl bg-red-50 p-3">
+                            <p class="text-[10px] font-black uppercase tracking-[.12em] text-red-600">
+                                Saldo
+                            </p>
+
+                            <p class="mt-1 font-black text-red-700">
+                                S/ <?php echo number_format((float)$orden['saldo'], 2); ?>
+                            </p>
+                        </div>
 
                     </div>
 
-                </article>
+                    <?php if (count($pagos) > 0): ?>
 
-            <?php endforeach; ?>
+                        <div class="mt-5 space-y-3">
 
-        </section>
+                            <?php foreach ($pagos as $pago): ?>
 
-        <?php if (!empty($orden['telefono'])): ?>
+                                <div class="rounded-2xl border border-slate-100 bg-slate-50 p-4">
 
-            <section class="mt-6">
-                <a
-                    href="https://wa.me/51<?php echo preg_replace('/[^0-9]/', '', $orden['telefono']); ?>?text=<?php echo urlencode('Hola, su orden ' . ($orden['codigo'] ?: ('ORD-' . $orden['id'])) . ' fue registrada por S/ ' . number_format((float)$orden['total'], 2)); ?>"
-                    target="_blank"
-                    class="block rounded-[1.5rem] bg-emerald-500 px-5 py-4 text-center text-base font-black text-white shadow-xl shadow-emerald-500/20 active:scale-[.98]"
-                >
-                    Avisar por WhatsApp
-                </a>
+                                    <div class="flex items-center justify-between gap-3">
+                                        <div>
+                                            <p class="font-black">
+                                                S/ <?php echo number_format((float)$pago['monto'], 2); ?>
+                                            </p>
+
+                                            <p class="mt-1 text-xs font-bold text-slate-500">
+                                                <?php echo htmlspecialchars($pago['metodo']); ?>
+                                                · <?php echo date('d/m/Y H:i', strtotime($pago['created_at'])); ?>
+                                            </p>
+                                        </div>
+
+                                        <span class="rounded-full bg-emerald-100 px-3 py-1 text-[11px] font-black text-emerald-700">
+                                            Abono
+                                        </span>
+                                    </div>
+
+                                    <?php if (!empty($pago['observacion'])): ?>
+                                        <p class="mt-2 text-sm font-semibold text-slate-500">
+                                            <?php echo htmlspecialchars($pago['observacion']); ?>
+                                        </p>
+                                    <?php endif; ?>
+
+                                </div>
+
+                            <?php endforeach; ?>
+
+                        </div>
+
+                    <?php else: ?>
+
+                        <div class="mt-5 rounded-2xl border border-dashed border-slate-300 bg-white p-4 text-center">
+                            <p class="text-sm font-bold text-slate-500">
+                                Aún no hay pagos registrados.
+                            </p>
+                        </div>
+
+                    <?php endif; ?>
+
+                </div>
+
             </section>
 
-        <?php endif; ?>
+        </main>
 
-    </main>
-
-</div>
+    </div>
 
 </body>
+
 </html>
